@@ -1,17 +1,15 @@
-// compilar con el comando : gcc -O3 -march=native -flto -funroll-loops -o quicksort quicksort.c
+// compilar con el sgte comando: gcc -O3 -march=native -flto -funroll-loops -o quicksort quicksort.c
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-// Utility function to swap two elements
 inline void swap(int* a, int* b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
 
-// Median-of-three to choose pivot
 inline int medianOfThree(int arr[], int low, int high) {
     int mid = low + (high - low) / 2;
     if (arr[low] > arr[mid]) swap(&arr[low], &arr[mid]);
@@ -20,11 +18,10 @@ inline int medianOfThree(int arr[], int low, int high) {
     return mid;
 }
 
-// Partition function to place the pivot element in the correct position
 inline int partition(int arr[], int low, int high) {
     int pivotIndex = medianOfThree(arr, low, high);
     int pivotValue = arr[pivotIndex];
-    swap(&arr[pivotIndex], &arr[high]); // Move pivot to end
+    swap(&arr[pivotIndex], &arr[high]); 
     int i = low - 1;
     for (int j = low; j < high; ++j) {
         if (arr[j] < pivotValue) {
@@ -32,12 +29,12 @@ inline int partition(int arr[], int low, int high) {
             swap(&arr[i], &arr[j]);
         }
     }
-    swap(&arr[i + 1], &arr[high]); // Move pivot to its final place
+    swap(&arr[i + 1], &arr[high]); 
     return i + 1;
 }
 
-// Insertion Sort function for small arrays
-void insertionSort(int arr[], int low, int high) {
+
+inline void sort(int arr[], int low, int high) {
     for (int i = low + 1; i <= high; ++i) {
         int key = arr[i];
         int j = i - 1;
@@ -49,17 +46,17 @@ void insertionSort(int arr[], int low, int high) {
     }
 }
 
-// Optimized QuickSort function
+
 void quickSort(int arr[], int low, int high) {
     while (low < high) {
-        // Use insertion sort for small partitions
+       
         if (high - low < 10) {
-            insertionSort(arr, low, high);
+            sort(arr, low, high);
             break;
         } else {
             int pi = partition(arr, low, high);
 
-            // Recur for the smaller half first to keep recursion depth minimal
+            
             if (pi - low < high - pi) {
                 quickSort(arr, low, pi - 1);
                 low = pi + 1;
@@ -71,7 +68,7 @@ void quickSort(int arr[], int low, int high) {
     }
 }
 
-// Shuffle the array to randomize the input
+
 void shuffleArray(int arr[], int n) {
     for (int i = n - 1; i > 0; i--) {
         int j = rand() % (i + 1);
@@ -81,7 +78,7 @@ void shuffleArray(int arr[], int n) {
 
 // Benchmark QuickSort function
 void benchmarkQuickSort(int arr[], int n) {
-    shuffleArray(arr, n); // Shuffle the array to randomize the input
+    shuffleArray(arr, n);
 
     struct timespec start, end;
     clock_gettime(CLOCK_MONOTONIC, &start);
@@ -96,7 +93,7 @@ void benchmarkQuickSort(int arr[], int n) {
 }
 
 int main() {
-    srand(time(NULL)); // Seed the random number generator
+    srand(time(NULL));
 
     int small[100], medium[300], large[500];
 
